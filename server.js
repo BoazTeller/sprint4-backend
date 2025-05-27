@@ -1,73 +1,79 @@
-import http from 'http'
-import path from 'path'
+// Node.js core modules
+import { createServer } from 'http'
+import { fileURLToPath } from 'url'
+import path, { dirname } from 'path'
+
+// External modules
+import cookieParser from 'cookie-parser'
 import cors from 'cors'
 import express from 'express'
-import cookieParser from 'cookie-parser'
 
-import { authRoutes } from './api/auth/auth.routes.js'
-import { userRoutes } from './api/user/user.routes.js'
-import { reviewRoutes } from './api/review/review.routes.js'
+// Services
+import { logger } from './services/logger.service.js'
 import { setupSocketAPI } from './services/socket.service.js'
 
+// Routes
+import { authRoutes } from './api/auth/auth.routes.js'
+import { reviewRoutes } from './api/review/review.routes.js'
+// import { stationRoutes } from './api/station/station.routes.js'
+import { userRoutes } from './api/user/user.routes.js'
+
+// Middleware imports
 import { setupAsyncLocalStorage } from './middlewares/setupAls.middleware.js'
 
-const app = express()
-const server = http.createServer(app)
+// Suport for __dirname in ES modules
+const __filename = fileURLToPath (import.meta.url)
+const __dirname = dirname(__filename)
 
-// Express App Config
+// App setup
+const app = express()
+const server = createServer(app)
+const isProduction = process.env.NODE_ENV === 'production'
+
+// Middleware registration
 app.use(cookieParser())
 app.use(express.json())
+app.set('query parser', 'extended')
+app.all('/*all', setupAsyncLocalStorage) // Init ALS context for all routes
 
-if (process.env.NODE_ENV === 'production') {
-    app.use(express.static(path.resolve('public')))
+if (isProduction) {
+    app.use(express.static(path.resolve(__dirname, 'public')))
 } else {
     const corsOptions = {
         origin: [
             'http://127.0.0.1:3000',
             'http://localhost:3000',
+            'http://127.0.0.1:3030',
+            'http://localhost:3030',
             'http://127.0.0.1:5173',
-            'http://localhost:5173'
+            'http://localhost:5173',
+            'http://127.0.0.1:5174',
+            'http://localhost:5174',
         ],
-        credentials: true
+        credentials: true,
     }
     app.use(cors(corsOptions))
 }
 
-
-app.all('/*all', setupAsyncLocalStorage)
-
+// API Routes
 app.use('/api/auth', authRoutes)
-app.use('/api/user', userRoutes)
 app.use('/api/review', reviewRoutes)
+// app.use('/api/station', stationRoutes)
+app.use('/api/user', userRoutes)
 
+// Set up sockets after routes are loaded
 setupSocketAPI(server)
 
-
-
-app.get('/secret', (req, res) => {
-    if (process.env.SECRET_STR) {
-        res.send(process.env.SECRET_STR)
-    } else {
-        res.send('No secret string attached')
-    }
-})
-
-
-// Make every unhandled server-side-route match index.html
-// so when requesting http://localhost:3030/unhandled-route... 
-// it will still serve the index.html file
-// and allow vue/react-router to take it from there
-
+// Fallback route: serve index.html
 app.get('/*all', (req, res) => {
     res.sendFile(path.resolve('public/index.html'))
 })
 
-import { logger } from './services/logger.service.js'
+// Start server
 const port = process.env.PORT || 3030
-
-server.listen(port, () => {
-    logger.info('Server is running on: ' + `http://localhost:${port}/`)
+server.listen(port, (err) => {
+    if (err) loggerService.error('Server failed to start', err)
+    else logger.info(`Server is running on http://localhost:${port}`)
 })
-
 
 
