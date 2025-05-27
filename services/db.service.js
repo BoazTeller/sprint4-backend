@@ -3,9 +3,11 @@ import { MongoClient } from 'mongodb'
 import { config } from '../config/index.js'
 import { logger } from './logger.service.js'
 
-export const dbService = { getCollection }
+let dbConn = null
 
-var dbConn = null
+export const dbService = { 
+    getCollection 
+}
 
 async function getCollection(collectionName) {
     try { 
@@ -13,7 +15,7 @@ async function getCollection(collectionName) {
         const collection = await db.collection(collectionName)
         return collection
     } catch (err) {
-        logger.error('Failed to get Mongo collection', err)
+        logger.error(`Failed to get collection: ${collectionName}`, err)
         throw err
     }
 }
@@ -23,9 +25,10 @@ async function _connect() {
 
     try {
         const client = await MongoClient.connect(config.dbURL)
-        return dbConn = client.db(config.dbName)
+        dbConn = client.db(config.dbName)
+        return dbConn
     } catch (err) {
-        logger.error('Cannot Connect to DB', err)
+        logger.error('Database connection failed', err)
         throw err
     }
 }
