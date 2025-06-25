@@ -3,14 +3,21 @@ import { logger } from '../../services/logger.service.js'
 
 export async function login(req, res) {
     const { username, password } = req.body
+    console.log('username:',username)
+    console.log('password:',password)
+
+
+    
     try {
+        console.log('Enter TRY LOGIN:')
         const user = await authService.login(username, password)
         const loginToken = authService.getLoginToken(user)
+        console.log('userLOGIN:',user)
 
         logger.info('User login: ', user)
 
         res.cookie('loginToken', loginToken, { sameSite: 'None', secure: true })
-        res.json(user)
+        res.send(user)
     } catch (err) {
         logger.error('Failed to Login ' + err)
         res.status(401).send({ err: 'Failed to Login' })
@@ -32,7 +39,7 @@ export async function signup(req, res) {
 
         const loginToken = authService.getLoginToken(user)
         res.cookie('loginToken', loginToken, { sameSite: 'None', secure: true })
-        res.json(user)
+        res.send(user)
     } catch (err) {
         logger.error('Failed to signup ' + err)
         res.status(400).send({ err: 'Failed to signup' })
