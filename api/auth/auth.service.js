@@ -27,6 +27,7 @@ async function login(username, password) {
 
   delete user.password
   return user
+ 
 }
 
 // async function signup({ username, password, fullname, imgUrl, isAdmin }) {
