@@ -18,21 +18,19 @@ async function login(username, password) {
 
 
   const user = await userService.getByUsername(username)
-   console.log('user-auth-getby:',user)
   if (!user) throw new Error('Invalid username or password')
 
   const match = await bcrypt.compare(password, user.password)
-  console.log('match:',match)
   if (!match) throw new Error('Invalid username or password')
 
   delete user.password
+  console.log('user:',user)
   return user
  
 }
 
 // async function signup({ username, password, fullname, imgUrl, isAdmin }) {
 async function signup(credentials) {
-  console.log('credentials:',credentials)
   const saltRounds = 10
 
   logger.debug(`auth.service - signup with username: ${credentials.username}, fullname: ${credentials.fullname}`)
@@ -40,9 +38,7 @@ async function signup(credentials) {
     return Promise.reject('Missing required signup information')
 
   const userExist = await userService.getByUsername(credentials.username)
-  console.log('userExist:',userExist)
   if (userExist) return Promise.reject('Username already taken')
-    console.log('getting out ?:',)
   const hash = await bcrypt.hash(credentials.password, saltRounds)
   // return userService.add({ username, password: hash, fullname, imgUrl, isAdmin })
   return userService.add({ ...credentials, password: hash })

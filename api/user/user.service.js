@@ -101,6 +101,7 @@ async function update(user) {
       fullname: user.fullname,
       imgUrl: user.imgUrl,
       likedSongsStationId: user.likedSongsStationId,
+      likedStationIds: user.likedStationIds || [],
     }
 
     const collection = await dbService.getCollection('user')
@@ -132,7 +133,6 @@ async function update(user) {
 //     }
 // }
 async function add(user) {
-  console.log('user:',user)
   try {
     const userToAdd = {
       username: user.username,

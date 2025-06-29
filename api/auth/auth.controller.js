@@ -3,16 +3,14 @@ import { logger } from '../../services/logger.service.js'
 
 export async function login(req, res) {
     const { username, password } = req.body
-    console.log('username:',username)
-    console.log('password:',password)
 
 
     
     try {
-        console.log('Enter TRY LOGIN:')
+        
         const user = await authService.login(username, password)
         const loginToken = authService.getLoginToken(user)
-        console.log('userLOGIN:',user)
+      
 
         logger.info('User login: ', user)
 
@@ -27,6 +25,7 @@ export async function login(req, res) {
 export async function signup(req, res) {
     try {
         const credentials = req.body
+       
 
         // Never log passwords
         // logger.debug(credentials)
