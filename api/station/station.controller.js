@@ -15,7 +15,6 @@ export async function getStations(req, res) {
 }
 
 export async function getStationById(req, res) {
-  console.log(req.params.stationId)
 
   try {
     const { stationId } = req.params
@@ -31,7 +30,6 @@ export async function addStation(req, res) {
   const { loggedinUser } = req
 
   // const {body: station} =req
-  console.log('req.body:', req.body)
 
   const { createdBy, imgUrl, likedByUsers, msgs, name, origId, songs, tags } = req.body
   const station = {
@@ -46,7 +44,6 @@ export async function addStation(req, res) {
   }
   try {
     const savedStation = await stationService.addStation(station)
-    console.log('SAVEDDDDDDDDDDDDDDDDDDDDDDDD:', savedStation)
     res.send(savedStation)
   } catch (error) {
     logger.error('Cannot add station', error)
@@ -76,7 +73,6 @@ export async function updateStation(req, res) {
     }
 
     const savedStation = await stationService.updateStation(station)
-    console.log('UPDATEEEEEEEEEEDDDDDDDDDD:', savedStation)
     res.send(savedStation)
   } catch (error) {
     logger.error('Cannot update station', error)
@@ -115,7 +111,6 @@ export async function removeStation(req, res) {
 }
 
 export async function addStationMsg(req, res) {
-  console.log('GETTING HERE THE MSG')
   const { loggedinUser } = req
   const { stationId } = req.params
   try {

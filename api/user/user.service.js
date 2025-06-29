@@ -72,7 +72,7 @@ async function getByUsername(username) {
   try {
     const collection = await dbService.getCollection('user')
     const user = await collection.findOne({ username })
-   
+
     return user
   } catch (err) {
     logger.error(`while finding user by username: ${username}`, err)
@@ -94,13 +94,14 @@ async function remove(userId) {
 
 async function update(user) {
   try {
-    // pick only fields that are allowed to be updated
+
     const userToSave = {
       _id: ObjectId.createFromHexString(user._id),
       username: user.username,
       fullname: user.fullname,
       imgUrl: user.imgUrl,
       likedSongsStationId: user.likedSongsStationId,
+      likedStationIds: user.likedStationIds || [],
     }
 
     const collection = await dbService.getCollection('user')
@@ -132,7 +133,6 @@ async function update(user) {
 //     }
 // }
 async function add(user) {
-  console.log('user:',user)
   try {
     const userToAdd = {
       username: user.username,
@@ -144,9 +144,11 @@ async function add(user) {
       likedSongsStationId: user.likedSongsStationId || null,
       likedStationIds: user.likedStationIds || [],
     }
-
+    console.log('userToAdd BEFORE INSERT:', userToAdd)
     const collection = await dbService.getCollection('user')
     const { insertedId } = await collection.insertOne(userToAdd)
+    const justInserted = await collection.findOne({ _id: insertedId })
+    console.log('justInserted:', justInserted)
     userToAdd._id = insertedId
 
     delete userToAdd.password
