@@ -26,7 +26,8 @@ stationRoutes.post('/', requireAuth, addStation)
 
 stationRoutes.put('/:stationId', requireAuth, updateStation)
 
-stationRoutes.delete('/:stationId', requireAdmin, requireAuth, removeStation)
+stationRoutes.delete('/:stationId', requireAuth, removeStation)
+// stationRoutes.delete('/:stationId', requireAdmin, requireAuth, removeStation)
 
 
 stationRoutes.post('/:stationId/msg', requireAuth, addStationMsg)
