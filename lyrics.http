@@ -1,0 +1,3 @@
+### Test Genius Lyrics Proxy - Jacob Banks / Mercy
+GET http://localhost:3030/api/lyrics?artist=Jacob%20Banks&title=Mercy
+Accept: application/json

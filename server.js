@@ -17,6 +17,7 @@ import { authRoutes } from './api/auth/auth.routes.js'
 import { reviewRoutes } from './api/review/review.routes.js'
 import { stationRoutes } from './api/station/station.routes.js'
 import { userRoutes } from './api/user/user.routes.js'
+import { lyricsRoutes } from './api/lyrics/lyrics.routes.js'
 
 // Middleware imports
 import { setupAsyncLocalStorage } from './middlewares/setupAls.middleware.js'
@@ -60,6 +61,7 @@ app.use('/api/auth', authRoutes)
 app.use('/api/review', reviewRoutes)
 app.use('/api/station', stationRoutes)
 app.use('/api/user', userRoutes)
+app.use('/api/lyrics', lyricsRoutes)
 
 // Set up sockets after routes are loaded
 setupSocketAPI(server)
