@@ -13,13 +13,13 @@ export const authService = {
   signup,
   login,
   getLoginToken,
-  validateToken,
+  validateToken
 }
 
 async function login(username, password) {
   logger.debug(`auth.service - login with username: ${username}`)
 
-
+  //test
   const user = await userService.getByUsername(username)
   if (!user) throw new Error('Invalid username or password')
 
@@ -27,16 +27,17 @@ async function login(username, password) {
   if (!match) throw new Error('Invalid username or password')
 
   delete user.password
-  console.log('user:',user)
+  
   return user
- 
 }
 
 // async function signup({ username, password, fullname, imgUrl, isAdmin }) {
 async function signup(credentials) {
   const saltRounds = 10
 
-  logger.debug(`auth.service - signup with username: ${credentials.username}, fullname: ${credentials.fullname}`)
+  logger.debug(
+    `auth.service - signup with username: ${credentials.username}, fullname: ${credentials.fullname}`
+  )
   if (!credentials.username || !credentials.password || !credentials.fullname)
     return Promise.reject('Missing required signup information')
 
@@ -56,7 +57,7 @@ function getLoginToken(user) {
     isAdmin: user.isAdmin,
     likedSongIds: user.likedSongIds,
     likedSongsStationId: user.likedSongsStationId,
-    likedStationIds: user.likedStationIds,
+    likedStationIds: user.likedStationIds
   }
   return cryptr.encrypt(JSON.stringify(userInfo))
 }
