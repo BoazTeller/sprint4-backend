@@ -1,3 +1,33 @@
 ### Test Genius Lyrics Proxy - Jacob Banks / Mercy
 GET http://localhost:3030/api/lyrics?artist=Jacob%20Banks&title=Mercy
 Accept: application/json
+
+### Test Genius Lyrics Proxy - Jacob Banks / Mercy
+GET http://localhost:3030/api/lyrics?artist=Beatles&title=Help
+Accept: application/json
+
+### Sign up bobo/123 if needed
+POST http://localhost:3030/api/auth/login
+Content-Type: application/json
+
+{
+    "username": "bobo",
+    "password": "123"
+}
+
+### Sign up bobo/123 if needed
+POST http://localhost:3030/api/auth/login
+Content-Type: application/json
+
+{
+    "username": "mika",
+    "password": "123"
+}
+
+### Adele - Rolling in the Deep
+GET http://localhost:3030/api/lyrics?artist=Adele&title=Rolling%20in%20the%20Deep
+Accept: application/json
+
+### Ed Sheeran - Shape of You
+GET http://localhost:3030/api/lyrics?artist=Ed%20Sheeran&title=Shape%20of%20You
+Accept: application/json
