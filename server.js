@@ -1,3 +1,6 @@
+import dotenv from 'dotenv' 
+dotenv.config() 
+
 // Node.js core modules
 import { createServer } from 'http'
 import { fileURLToPath } from 'url'
