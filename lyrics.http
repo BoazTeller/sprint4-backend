@@ -31,3 +31,39 @@ Accept: application/json
 ### Ed Sheeran - Shape of You
 GET http://localhost:3030/api/lyrics?artist=Ed%20Sheeran&title=Shape%20of%20You
 Accept: application/json
+
+### Test Genius Lyrics Proxy - Linkin Park / In the End
+GET http://localhost:3030/api/lyrics?artist=Linkin%20Park&title=In%20the%20End
+Accept: application/json
+
+### Test Genius Lyrics Proxy - Linkin Park / Numb
+GET http://localhost:3030/api/lyrics?artist=Linkin%20Park&title=Numb
+Accept: application/json
+
+### Test Genius Lyrics Proxy - Linkin Park / Crawling
+GET http://localhost:3030/api/lyrics?artist=Linkin%20Park&title=Crawling
+Accept: application/json
+
+### Test Genius Lyrics Proxy - Linkin Park / Somewhere I Belong
+GET http://localhost:3030/api/lyrics?artist=Linkin%20Park&title=Somewhere%20I%20Belong
+Accept: application/json
+
+### Test Genius Lyrics Proxy - Linkin Park / Breaking the Habit
+GET http://localhost:3030/api/lyrics?artist=Linkin%20Park&title=Breaking%20the%20Habit
+Accept: application/json
+
+### Test Genius Lyrics Proxy - Linkin Park / Papercut
+GET http://localhost:3030/api/lyrics?artist=Linkin%20Park&title=Papercut
+Accept: application/json
+
+### Test Genius Lyrics Proxy - Linkin Park / Faint
+GET http://localhost:3030/api/lyrics?artist=Linkin%20Park&title=Faint
+Accept: application/json
+
+### Test Genius Lyrics Proxy - Linkin Park / One Step Closer
+GET http://localhost:3030/api/lyrics?artist=Linkin%20Park&title=One%20Step%20Closer
+Accept: application/json
+
+### Test Genius Lyrics Proxy - Linkin Park / Bleed It Out
+GET http://localhost:3030/api/lyrics?artist=Linkin%20Park&title=Bleed%20It%20Out
+Accept: application/json
