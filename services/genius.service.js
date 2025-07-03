@@ -80,32 +80,55 @@ return markdown
 //     return lyrics || null
 // }
 
-    export async function scrapeGeniusLyrics(songUrl) {
-        try {
-            const { data } = await axios.get(songUrl, {
-                headers: {
-                    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36',
-                    'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
-                    'Accept-Language': 'en-US,en;q=0.5',
-                },
-                timeout: 7000
-            })
+    // export async function scrapeGeniusLyrics(songUrl) {
+    //     try {
+    //         const { data } = await axios.get(songUrl, {
+    //             headers: {
+    //                 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36',
+    //                 'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
+    //                 'Accept-Language': 'en-US,en;q=0.5',
+    //             },
+    //             timeout: 7000
+    //         })
 
-            const $ = load(data)
-            const lyrics = $('[data-lyrics-container="true"]').text().trim()
-            return lyrics || null
-        } catch (err) {
-            console.error('🔥 Genius scrape error:', err.message)
-            return null
-        }
+    //         const $ = load(data)
+    //         const lyrics = $('[data-lyrics-container="true"]').text().trim()
+    //         return lyrics || null
+    //     } catch (err) {
+    //         console.error('🔥 Genius scrape error:', err.message)
+    //         return null
+    //     }
+    // }
+
+
+const SCRAPERAPI_KEY = process.env.SCRAPERAPI_KEY
+
+export async function scrapeGeniusLyrics(songUrl) {
+    try {
+        // Route the request through ScraperAPI!
+        const apiUrl = `http://api.scraperapi.com/?api_key=${SCRAPERAPI_KEY}&url=${encodeURIComponent(songUrl)}`
+        const { data } = await axios.get(apiUrl, {
+            timeout: 15000  // longer timeout, since it's an external service
+        })
+
+        const $ = load(data)
+        const lyrics = $('[data-lyrics-container="true"]').text().trim()
+        return lyrics || null
+    } catch (err) {
+        console.error('🔥 Genius scrape error:', err.message)
+        return null
     }
-
+}
 
 // Third - Full pipeline: search and scrape
 export async function getLyricsFromGenius(artist, title) {
-    return lyricsTxt
-    // console.log('getting lyrics for:', artist, title)
-    // const songUrl = await searchGenius(artist, title)
+    // return lyricsTxt
+    console.log('getting lyrics for:', artist, title)
+    const songUrl = await searchGenius(artist, title)
+    const lyrics = await scrapeGeniusLyrics(songUrl)
+    if (!lyrics) throw new Error('No lyrics found on Genius')
+    console.log(lyrics)
+    return
     // let lyrics = await scrapeFireCrwal(songUrl)
     // const cleanLyrics = await askGemini(lyrics)
     // // console.log(lyrics)
