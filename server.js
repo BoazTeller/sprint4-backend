@@ -10,6 +10,8 @@ import path, { dirname } from 'path'
 import cookieParser from 'cookie-parser'
 import cors from 'cors'
 import express from 'express'
+import cron from 'node-cron'
+import axios from 'axios'
 
 // Services
 import { logger } from './services/logger.service.js'
@@ -24,6 +26,8 @@ import { lyricsRoutes } from './api/lyrics/lyrics.routes.js'
 
 // Middleware imports
 import { setupAsyncLocalStorage } from './middlewares/setupAls.middleware.js'
+
+
 
 // Suport for __dirname in ES modules
 const __filename = fileURLToPath (import.meta.url)
@@ -68,6 +72,21 @@ app.use('/api/lyrics', lyricsRoutes)
 
 // Set up sockets after routes are loaded
 setupSocketAPI(server)
+
+// Wake-up route
+app.get('/wake-up', (req, res) => {
+    res.send('Service is awake and working');
+})
+
+// Wake-up task to keep the service active every 13 minutes
+cron.schedule('*/13 * * * *', async () => {
+    try {
+        console.log('Wake-up task running')
+        await axios.get(`https://your-render-app-name.onrender.com/wake-up`) // Replace with your actual Render URL
+    } catch (error) {
+        console.error('Error during wake-up task:', error)
+    }
+})
 
 // Fallback route: serve index.html
 app.get('/*all', (req, res) => {
