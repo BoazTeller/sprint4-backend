@@ -25,7 +25,13 @@ export async function searchGenius(artist, title) {
 
 // Second - Scrape lyrics from Genius page
 export async function scrapeGeniusLyrics(songUrl) {
-    const { data } = await axios.get(songUrl)
+    // const { data } = await axios.get(songUrl)
+    const { data } = await axios.get(songUrl, {
+        headers: {
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36'
+        }
+    })
+
     const $ = load(data)
     
     // As of Jul 2025, these selectors work but Genuis can change them
