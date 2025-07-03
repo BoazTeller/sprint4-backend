@@ -1,6 +1,7 @@
 import axios from 'axios'
 import { load } from 'cheerio'
 import { GoogleGenAI } from "@google/genai";
+import FirecrawlApp  from '@mendable/firecrawl-js';
 import dotenv from 'dotenv' //import the dotenv 
 dotenv.config() 
 
@@ -16,12 +17,41 @@ export async function searchGenius(artist, title) {
         }
     })
 
+    // curl "https://r.jina.ai/"
+
+    console.log('URL', url)
+    console.log( 'RESSS', res.data)
+
     // Pick the first hit (best match)
     const hits = res.data.response.hits
     if (!hits.length) throw new Error('No results found')
     const songUrl = hits[0].result.url
+console.log('songurl ', songUrl);
+
     return songUrl
 }
+
+// Install with npm install @mendable/firecrawl-js
+
+const app = new FirecrawlApp({apiKey: process.env.FIRE_CRWL});
+
+async function scrapeFireCrwal(url) {
+    try{
+const {markdown} = await app.scrapeUrl(url, {
+	formats: [ "markdown" ],
+	onlyMainContent: true
+});
+// console.log(markdown)
+
+return markdown
+    }catch(err){
+        console.log(err);
+        
+    }
+
+}
+
+
 
 // Second - Scrape lyrics from Genius page
 // export async function scrapeGeniusLyrics(songUrl) {
@@ -75,10 +105,10 @@ export async function searchGenius(artist, title) {
 export async function getLyricsFromGenius(artist, title) {
     console.log('getting lyrics for:', artist, title)
     const songUrl = await searchGenius(artist, title)
-    let lyrics = await scrapeGeniusLyrics(songUrl)
+    let lyrics = await scrapeFireCrwal(songUrl)
     const cleanLyrics = await askGemini(lyrics)
-    // console.log(lyrics)
-    // lyrics = cleanLyrics(lyrics)
+    // // console.log(lyrics)
+    // // lyrics = cleanLyrics(lyrics)
     return cleanLyrics
 }
 
