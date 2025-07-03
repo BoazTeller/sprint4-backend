@@ -29,6 +29,8 @@ import { setupAsyncLocalStorage } from './middlewares/setupAls.middleware.js'
 
 
 
+
+
 // Suport for __dirname in ES modules
 const __filename = fileURLToPath (import.meta.url)
 const __dirname = dirname(__filename)
@@ -82,7 +84,7 @@ app.get('/wake-up', (req, res) => {
 cron.schedule('*/13 * * * *', async () => {
     try {
         console.log('Wake-up task running')
-        await axios.get(`https://your-render-app-name.onrender.com/wake-up`) // Replace with your actual Render URL
+        await axios.get(`https://misterbeat.onrender.com/wake-up`)
     } catch (error) {
         console.error('Error during wake-up task:', error)
     }
