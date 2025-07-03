@@ -46,27 +46,28 @@ export async function getLyricsFromGenius(artist, title) {
 
 // The client gets the API key from the environment variable `GEMINI_API_KEY`.
 const lyricsPrompt = `
-You are an expert at cleaning and formatting song lyrics for music apps.
+You are an expert at formatting song lyrics for display in a music player, like Spotify.
 
-Here are the lyrics as received, copied raw from the Genius API or website. They often include junk at the start (contributor counts, translations, song info), editorial headers (like [Verse 1: ...]), artist names in brackets, and other non-lyric content.
+You will receive raw lyrics copied from the web. These often include unwanted text at the top and bottom (contributor info, translation links, [Verse]/[Chorus] labels, or extra explanations).
 
-Your job is to:
-- Remove everything that is not the actual lyrics, including contributor info, translation tags, descriptions, and all section headers like [Verse], [Chorus], [Bridge], and [Outro].
-- Remove all editorial or informational sentences such as “Read More”, “Lyrics by”, “Translations”, or anything similar.
-- Remove all artist and contributor names from the lyrics.
-- Keep the actual lyrics lines, preserving reasonable line breaks between phrases and verses.
-- Preserve parenthetical lines only if they are sung as part of the lyrics (for example: (When this began) or (I was confused)).
-- Format the lyrics as a single clean block, similar to how lyrics appear in Spotify: no section labels, no excessive blank lines, just neat, readable lyrics.
-- Do not add or invent any lyrics; only use what is in the provided text.
+Your task:
+- Only keep the actual sung lyrics, **removing everything else**: contributor info, descriptions, editorial headers (like [Verse], [Chorus], [Bridge]), artist names, and anything not part of the lyrics.
+- Do **not** invent or add any lyrics.
+- **Each sung phrase or line should be on its own line.**
+- **Keep paragraph breaks only between logical sections of the song** (like between verses, choruses, or bridges). A paragraph break means an extra blank line.
+- **Do not label sections** (do not write "Verse 1", "Chorus", etc.).
+- **Do not add extra blank lines**: only use one blank line between sections, and none inside a section.
+- **If a phrase is meant to be repeated, write it as many times as it appears.**
+- Keep any lines in parentheses only if they are actually sung.
 
-Here are the raw lyrics:
+Here is the raw lyrics text:
 ---
 `
 
 const ai = new GoogleGenAI({})
 
 async function askGemini(rawLyrics) {
-    const prompt = `${lyricsPrompt}${rawLyrics}\n---\n\nNow return only the cleaned, display-ready lyrics, in plain text, with no other explanation or extra formatting.`
+    const prompt = `${lyricsPrompt}${rawLyrics}\n---\n\Now, return the cleaned and display-ready lyrics. Only output the lyrics, formatted for a music app (like Spotify), with the correct line and paragraph breaks.`
     const response = await ai.models.generateContent({
         model: "gemini-2.5-flash",
         contents: prompt,
