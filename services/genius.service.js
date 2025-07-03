@@ -24,31 +24,52 @@ export async function searchGenius(artist, title) {
 }
 
 // Second - Scrape lyrics from Genius page
-export async function scrapeGeniusLyrics(songUrl) {
-    // const { data } = await axios.get(songUrl)
+// export async function scrapeGeniusLyrics(songUrl) {
+//     // const { data } = await axios.get(songUrl)
     
-    // const { data } = await axios.get(songUrl, {
-    //     headers: {
-    //         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36'
-    //     }
-    // })
+//     // const { data } = await axios.get(songUrl, {
+//     //     headers: {
+//     //         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36'
+//     //     }
+//     // })
 
-    const { data } = await axios.get(songUrl, {
-        headers: {
-            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36',
-            'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
-            'Accept-Language': 'en-US,en;q=0.5',
-        },
-        timeout: 30000
-    })
+//     const { data } = await axios.get(songUrl, {
+//         headers: {
+//             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36',
+//             'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
+//             'Accept-Language': 'en-US,en;q=0.5',
+//         },
+//         timeout: 30000
+//     })
 
 
-    const $ = load(data)
+//     const $ = load(data)
     
-    // As of Jul 2025, these selectors work but Genuis can change them
-    const lyrics = $('[data-lyrics-container="true"]').text().trim()
-    return lyrics || null
-}
+//     // As of Jul 2025, these selectors work but Genuis can change them
+//     const lyrics = $('[data-lyrics-container="true"]').text().trim()
+//     return lyrics || null
+// }
+
+    export async function scrapeGeniusLyrics(songUrl) {
+        try {
+            const { data } = await axios.get(songUrl, {
+                headers: {
+                    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36',
+                    'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
+                    'Accept-Language': 'en-US,en;q=0.5',
+                },
+                timeout: 7000
+            })
+
+            const $ = load(data)
+            const lyrics = $('[data-lyrics-container="true"]').text().trim()
+            return lyrics || null
+        } catch (err) {
+            console.error('🔥 Genius scrape error:', err.message)
+            return null
+        }
+    }
+
 
 // Third - Full pipeline: search and scrape
 export async function getLyricsFromGenius(artist, title) {
